@@ -1,0 +1,88 @@
+<div class="card">
+  <p-table
+    #dt1
+    dataKey="id_inventario"
+    [columns]="cols"
+    [value]="products"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [paginator]="true"
+    [rows]="10"
+    [loading]="loading"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [showCurrentPageReport]="true"
+    sortMode="multiple"
+    [globalFilterFields]="filterFields"
+    exportFilename="Inventario"
+    [rowHover]="true"
+    [(selection)]="selectedProducts"
+    
+
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div style="text-align: left">
+          <p-button
+            icon="pi pi-file-excel"
+            label="Exportar"
+            class="p-button-success"
+            severity="success" 
+            (onClick)="exportExcel()"
+          />
+        </div>
+        <p-iconField iconPosition="left" class="ml-auto">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalFilter(dt1, $event)"
+            placeholder="Buscar"
+          />
+        </p-iconField>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox />
+        </th>
+        @for (col of columns; track col) {
+          <th
+            pSortableColumn="{{ col.field }}"
+            [ngStyle]="{ width: col.width }"
+          >
+            {{ col.header }} <p-sortIcon field="{{ col.field }}" />
+          </th>
+        }
+      </tr>
+
+      <tr>
+        <th></th>
+        @for (col of columns; track col) {
+          <th>
+            <p-columnFilter
+              type="{{ col.type }}"
+              field="{{ col.field }}"
+              placeholder="Buscar por {{ col.header }}"
+              ariaLabel="Filtrar por {{ col.header }}"
+            />
+          </th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="rowData" />
+        </td>
+        @for (col of columns; track col) {
+          <td>
+            {{ rowData[col.field] }}
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
